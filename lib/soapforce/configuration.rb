@@ -2,6 +2,7 @@ module Soapforce
   class Configuration
     attr_accessor :client_id
     attr_accessor :version
+    attr_accessor :organization_id
 
     def initialize
       @client_id = nil

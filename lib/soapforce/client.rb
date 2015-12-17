@@ -18,8 +18,25 @@ module Soapforce
       # in the header for every request.  This allows ISV Partners
       # to make SOAP calls in Professional/Group Edition organizations.
 
+      @headers = {}
       client_id = options[:client_id] || Soapforce.configuration.client_id
-      @headers = {"tns:CallOptions" => {"tns:client" => client_id}} if client_id
+      if client_id
+        @headers["tns:CallOptions"] = {
+          "tns:client" => client_id
+        }
+      end
+
+      # Allow organization_id to be set to allow a LoginScopeHeader to be set.
+      # This allows username/password authentication for community users.
+      # Note that their password either needs to include a security_token
+      # or you'll need to whitelist their ip (or a range of valid them).
+
+      organization_id = options[:organization_id] || Soapforce.configuration.organization_id
+      if organization_id
+        @headers['tns:LoginScopeHeader'] = {
+          'tns:organizationId' => organization_id
+        }
+      end
 
       @version = options[:version] || Soapforce.configuration.version || 28.0
       @host = options[:host] || "login.salesforce.com"
